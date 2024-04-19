@@ -113,7 +113,18 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+-- vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = ''
+
+vim.api.nvim_create_autocmd({ 'FocusGained' }, {
+  pattern = { '*' },
+  command = [[ call setreg("@", getreg("+"))]],
+})
+
+vim.api.nvim_create_autocmd({ 'FocusLost' }, {
+  pattern = { '*' },
+  command = [[ call setreg("+", getreg("@"))]],
+})
 
 -- Enable break indent
 vim.opt.breakindent = true
