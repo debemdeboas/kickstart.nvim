@@ -305,6 +305,14 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'lukas-reineke/virt-column.nvim',
+    opts = {
+      virtcolumn = '80,120',
+      char = '│',
+    },
+  },
+
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
