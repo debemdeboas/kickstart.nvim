@@ -640,6 +640,11 @@ require('lazy').setup({
           end,
         },
       }
+
+      require('lspconfig')['ansiblels'].setup {
+        filetypes = { 'yaml', 'yml', 'ansible' },
+        root_dir = require('lspconfig').util.root_pattern('roles', 'playbooks'),
+      }
     end,
   },
 
@@ -687,6 +692,7 @@ require('lazy').setup({
       -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
+        version = 'v2.*',
         build = (function()
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
@@ -700,12 +706,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -757,14 +763,29 @@ require('lazy').setup({
           end,
         },
         formatting = {
-          fields = { 'kind', 'abbr' },
+          fields = { 'kind', 'abbr', 'menu' },
           format = function(_, vim_item)
             vim_item.kind = cmp_kinds[vim_item.kind] or ''
             return vim_item
           end,
           expandable_indicator = true,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        completion = {
+          completeopt = 'menu,menuone,noinsert',
+        },
+
+        window = {
+          completion = {
+            border = 'rounded',
+            winhighlight = 'Normal:CmpNormal',
+            scrollbar = false,
+          },
+          documentation = {
+            border = 'rounded',
+            winhighlight = 'Normal:CmpDocNormal',
+            scrollbar = false,
+          },
+        },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
@@ -784,6 +805,11 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+
+          ['<CR>'] = cmp.mapping.confirm {
+            select = true,
+            behavior = cmp.ConfirmBehavior.Insert,
+          },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -814,8 +840,10 @@ require('lazy').setup({
         },
         sources = {
           { name = 'nvim_lsp' },
+          { name = 'buffer' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'nvim_lua' },
         },
       }
     end,
@@ -855,7 +883,30 @@ require('lazy').setup({
             enabled = true,
             indentscope_color = '',
           },
+          telescope = {
+            enabled = true,
+          },
+          which_key = true,
+          native_lsp = {
+            enabled = true,
+            virtual_text = {
+              errors = { 'italic' },
+              hints = { 'italic' },
+              warnings = { 'italic' },
+              information = { 'italic' },
+            },
+            underlines = {
+              errors = { 'underline' },
+              hints = { 'underline' },
+              warnings = { 'underline' },
+              information = { 'underline' },
+            },
+            inlay_hints = {
+              background = true,
+            },
+          },
         },
+        default_integrations = true,
       }
     end,
   },
@@ -900,6 +951,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -931,6 +983,14 @@ require('lazy').setup({
     end,
   },
 
+  -- {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   opts = {},
+  --   config = function()
+  --     require('lukas-reineke/indent-blankline.nvim').setup()
+  --   end,
+  -- },
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -940,9 +1000,9 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
