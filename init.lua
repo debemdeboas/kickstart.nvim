@@ -84,6 +84,9 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -288,31 +291,6 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  {
-    'alexghergh/nvim-tmux-navigation',
-    config = function()
-      require('nvim-tmux-navigation').setup {
-        disable_when_zoomed = true, -- defaults to false
-        keybindings = {
-          left = '<M-h>',
-          down = '<M-j>',
-          up = '<M-k>',
-          right = '<M-l>',
-          last_active = '<M-\\>',
-          next = '<M-Space>',
-        },
-      }
-    end,
-  },
-
-  {
-    'lukas-reineke/virt-column.nvim',
-    opts = {
-      virtcolumn = '80,120',
-      char = '│',
-    },
-  },
-
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -442,6 +420,18 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'folke/neodev.nvim',
+    config = function()
+      require('neodev').setup {
+        library = {
+          enabled = true,
+          plugins = true,
+        },
+      }
+    end,
+  },
+
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -456,7 +446,7 @@ require('lazy').setup({
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim', opts = {} },
+      'folke/neodev.nvim',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -846,68 +836,9 @@ require('lazy').setup({
           { name = 'nvim_lua' },
         },
       }
-    end,
-  },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    -- 'folke/tokyonight.nvim',
-    'catppuccin/nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      -- vim.cmd.colorscheme 'tokyonight-night'
-      vim.cmd.colorscheme 'catppuccin-macchiato'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-    config = function()
-      require('catppuccin').setup {
-        flavour = 'macchiato',
-        transparent_background = true,
-        term_colors = true,
-        no_italic = true,
-        integrations = {
-          cmp = true,
-          gitsigns = true,
-          nvimtree = true,
-          treesitter = true,
-          notify = false,
-          mini = {
-            enabled = true,
-            indentscope_color = '',
-          },
-          telescope = {
-            enabled = true,
-          },
-          which_key = true,
-          native_lsp = {
-            enabled = true,
-            virtual_text = {
-              errors = { 'italic' },
-              hints = { 'italic' },
-              warnings = { 'italic' },
-              information = { 'italic' },
-            },
-            underlines = {
-              errors = { 'underline' },
-              hints = { 'underline' },
-              warnings = { 'underline' },
-              information = { 'underline' },
-            },
-            inlay_hints = {
-              background = true,
-            },
-          },
-        },
-        default_integrations = true,
-      }
+      local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
+      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
   },
 
@@ -983,14 +914,6 @@ require('lazy').setup({
     end,
   },
 
-  -- {
-  --   'lukas-reineke/indent-blankline.nvim',
-  --   opts = {},
-  --   config = function()
-  --     require('lukas-reineke/indent-blankline.nvim').setup()
-  --   end,
-  -- },
-
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1009,7 +932,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
