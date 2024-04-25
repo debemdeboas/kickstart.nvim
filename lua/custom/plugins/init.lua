@@ -5,6 +5,8 @@
 return {
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
 
+  -- { 'xiyaowong/transparent.nvim' },
+
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -21,7 +23,7 @@ return {
       vim.cmd.colorscheme 'catppuccin-macchiato'
 
       -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
     config = function()
       require('catppuccin').setup {
@@ -116,7 +118,7 @@ return {
         source_selector = {
           winbar = true,
         },
-        close_if_last_window = false,
+        close_if_last_window = true,
         popup_border_style = 'rounded',
         enable_git_status = true,
         enable_diagnostics = true,
