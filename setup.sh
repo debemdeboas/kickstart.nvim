@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if ! [ -x "$(command -v fzf)" ]; then
+	echo "Installing fzf..."
+	sudo apt install -y fzf
+fi
+
 if ! [ -x "$(command -v nvim)"  ]; then
 	echo "Installing NeoVim..."
 	curl -LO "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
