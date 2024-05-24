@@ -11,7 +11,7 @@ fi
 if ! [ -x "$(command -v rg)" ]; then
 	echo "Installing ripgrep..."
 
-	rgver=$(curl -I -s "https://github.com/BurntSushi/ripgrep/releases/latest/" | grep location: | awk '{print substr($2,52)}')
+	rgver=$(curl -I -s "https://github.com/BurntSushi/ripgrep/releases/latest/" | grep location: | awk '{print substr($2,52)}' | tr -d '\r')
 	curl -LO "https://github.com/BurntSushi/ripgrep/releases/tag/${rgver}/ripgrep_${rgver}_amd64.deb"
 	sudo dpkg -i ripgrep_${rgver}_amd64.deb
 
